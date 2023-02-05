@@ -1,20 +1,23 @@
 package com.example.springlogin.service;
 
-import com.example.springlogin.dto.UserDTO;
+import com.example.springlogin.SpringConfig;
 import com.example.springlogin.repository.UserRepository;
+import com.example.springlogin.repository.UserRepositoryImpl;
 import com.example.springlogin.domain.User;
+import com.example.springlogin.service.validator.UserValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
-import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserRepository userRepository;
+
+    SpringConfig springConfig = new SpringConfig();
+    private final UserRepository userRepository = springConfig.UserRepository();
 
     /**
      * 중복검사 후 레포지토리에 저장
@@ -23,7 +26,7 @@ public class UserService {
      */
     public boolean join(User user) {
 
-        if(validateDuplicateUser(user.getEmail()) == null) {
+        if(UserValidator.validateDuplicate(user.getEmail()) == null) {
             userRepository.save(user);
             return true;
         }
@@ -31,15 +34,6 @@ public class UserService {
 
     }
 
-    /**
-     * 이메일 중복 검사
-     * @param email
-     * @return
-     */
-    public User validateDuplicateUser(String email) {
-        Optional<User> userByUserEmail = userRepository.findUserByUserEmail(email);
-        return userByUserEmail.orElse(null);
-    }
 
     /**
      * 로그인
@@ -50,7 +44,7 @@ public class UserService {
         String email = linkedHashMap.get("email").toString();
         String password = linkedHashMap.get("password").toString();
 
-        User user = validateDuplicateUser(email);
+        User user = UserValidator.validateDuplicate(email);
 
         if (user == null || !user.getPassword().equals(password)) {
             log.info("로그인 실패");

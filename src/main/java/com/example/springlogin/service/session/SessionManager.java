@@ -1,4 +1,4 @@
-package com.example.springlogin;
+package com.example.springlogin.service.session;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

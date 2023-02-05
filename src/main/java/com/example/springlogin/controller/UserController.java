@@ -1,7 +1,7 @@
 package com.example.springlogin.controller;
 
 import com.example.springlogin.domain.User;
-import com.example.springlogin.SessionManager;
+import com.example.springlogin.service.session.SessionManager;
 import com.example.springlogin.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -18,7 +19,8 @@ import java.util.LinkedHashMap;
 
 
 @Slf4j
-@RestController("/user")
+@RestController
+@RequestMapping("user")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -49,15 +51,17 @@ public class UserController {
      * @return
      */
     @PostMapping("/sign-in")
-    public void signIn(HttpServletRequest request, HttpServletResponse response,
+    public void signIn(HttpServletResponse response,
                        @RequestBody LinkedHashMap linkedHashMap) throws IOException {
         User loginUser = userService.logIn(linkedHashMap);
 
         if(loginUser == null) {
+            log.info("로그인 화면으로 리다이렉트");
             response.sendRedirect("http://localhost:8080/user/sign-in");
         }
 
         sessionManager.createSession(loginUser, response);
+        log.info("홈 화면으로 리다이렉트");
         response.sendRedirect("http://localhost:8080/home");
     }
 }
