@@ -46,7 +46,7 @@ public class UserService {
      * @param linkedHashMap
      * @return
      */
-    public UserDTO logIn(LinkedHashMap linkedHashMap) {
+    public User logIn(LinkedHashMap linkedHashMap) {
         String email = linkedHashMap.get("email").toString();
         String password = linkedHashMap.get("password").toString();
 
@@ -59,7 +59,7 @@ public class UserService {
 
         log.info("로그인 성공");
 
-        return UserDTO.from(user);
+        return user;
 
     }
 }

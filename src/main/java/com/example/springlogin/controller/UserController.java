@@ -1,8 +1,10 @@
 package com.example.springlogin.controller;
 
 import com.example.springlogin.domain.User;
-import com.example.springlogin.dto.UserDTO;
+import com.example.springlogin.SessionManager;
 import com.example.springlogin.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -11,14 +13,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 
 
 @Slf4j
-@RestController
+@RestController("/user")
 @RequiredArgsConstructor
 public class UserController {
 
+    private SessionManager sessionManager = new SessionManager();
     private final UserService userService;
 
     /**
@@ -45,11 +49,15 @@ public class UserController {
      * @return
      */
     @PostMapping("/sign-in")
-    public ResponseEntity<UserDTO> signIn(@RequestBody LinkedHashMap linkedHashMap) {
-        UserDTO userDTO = userService.logIn(linkedHashMap);
+    public void signIn(HttpServletRequest request, HttpServletResponse response,
+                       @RequestBody LinkedHashMap linkedHashMap) throws IOException {
+        User loginUser = userService.logIn(linkedHashMap);
 
-        if(userDTO == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if(loginUser == null) {
+            response.sendRedirect("http://localhost:8080/user/sign-in");
+        }
 
-        return new ResponseEntity(userDTO, HttpStatus.OK);
+        sessionManager.createSession(loginUser, response);
+        response.sendRedirect("http://localhost:8080/home");
     }
 }
