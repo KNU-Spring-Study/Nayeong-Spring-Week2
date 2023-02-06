@@ -3,11 +3,12 @@ package com.example.springlogin.service.validator;
 import com.example.springlogin.domain.User;
 import com.example.springlogin.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class UserValidator {
 
