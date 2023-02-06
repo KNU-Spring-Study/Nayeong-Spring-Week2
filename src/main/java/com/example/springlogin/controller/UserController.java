@@ -1,6 +1,7 @@
 package com.example.springlogin.controller;
 
 import com.example.springlogin.domain.User;
+import com.example.springlogin.dto.UserDTO;
 import com.example.springlogin.service.session.SessionConst;
 import com.example.springlogin.service.session.SessionManager;
 import com.example.springlogin.service.UserService;
@@ -96,6 +97,27 @@ public class UserController {
 
         log.info("logout={}", request.getSession().getId().toString());
         response.sendRedirect("http://localhost:8080/home");
+    }
+
+    /**
+     * 유저 정보 조회
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    @GetMapping("/mypage")
+    public ResponseEntity<UserDTO> myPage(HttpServletRequest request,
+                                          HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession(false);
+
+        if(session == null) {
+            response.sendRedirect("http://localhost:8080/user/login");
+        }
+
+        User user = (User) session.getAttribute(SessionConst.LOGIN_MEMBER);
+
+        return new ResponseEntity(UserDTO.from(user), HttpStatus.OK);
     }
 
 }
