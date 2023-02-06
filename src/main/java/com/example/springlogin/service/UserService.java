@@ -1,8 +1,6 @@
 package com.example.springlogin.service;
 
-import com.example.springlogin.SpringConfig;
 import com.example.springlogin.repository.UserRepository;
-import com.example.springlogin.repository.UserRepositoryImpl;
 import com.example.springlogin.domain.User;
 import com.example.springlogin.service.validator.UserValidator;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +14,8 @@ import java.util.LinkedHashMap;
 @RequiredArgsConstructor
 public class UserService {
 
-    SpringConfig springConfig = new SpringConfig();
-    private final UserRepository userRepository = springConfig.UserRepository();
+    private final UserRepository userRepository;
+    private final UserValidator userValidator;
 
     /**
      * 중복검사 후 레포지토리에 저장
@@ -26,7 +24,7 @@ public class UserService {
      */
     public boolean join(User user) {
 
-        if(UserValidator.validateDuplicate(user.getEmail()) == null) {
+        if(userValidator.validateDuplicate(user.getEmail()) == null) {
             userRepository.save(user);
             return true;
         }
@@ -44,7 +42,7 @@ public class UserService {
         String email = linkedHashMap.get("email").toString();
         String password = linkedHashMap.get("password").toString();
 
-        User user = UserValidator.validateDuplicate(email);
+        User user = userValidator.validateDuplicate(email);
 
         if (user == null || !user.getPassword().equals(password)) {
             log.info("로그인 실패");
