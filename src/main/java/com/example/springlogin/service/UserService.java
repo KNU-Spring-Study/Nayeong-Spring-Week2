@@ -1,5 +1,6 @@
 package com.example.springlogin.service;
 
+import com.example.springlogin.dto.LogInUserDTO;
 import com.example.springlogin.repository.UserRepository;
 import com.example.springlogin.domain.User;
 import com.example.springlogin.service.validator.UserValidator;
@@ -35,16 +36,14 @@ public class UserService {
 
     /**
      * 로그인
-     * @param linkedHashMap
+     * @param logInUserDTO
      * @return User.class
      */
-    public User logIn(LinkedHashMap linkedHashMap) {
-        String email = linkedHashMap.get("email").toString();
-        String password = linkedHashMap.get("password").toString();
+    public User logIn(LogInUserDTO logInUserDTO) {
 
-        User user = userValidator.validateDuplicate(email);
+        User user = userValidator.validateDuplicate(logInUserDTO.getEmail());
 
-        if (user == null || !user.getPassword().equals(password)) {
+        if (user == null || !user.getPassword().equals(logInUserDTO.getPassword())) {
             log.info("로그인 실패");
             return null;
         }

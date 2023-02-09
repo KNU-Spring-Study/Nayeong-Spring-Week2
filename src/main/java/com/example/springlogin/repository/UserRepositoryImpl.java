@@ -25,6 +25,7 @@ public class UserRepositoryImpl implements UserRepository {
         user.setId(++sequence);
         map.put(user.getId(), user);
         log.info("회원가입 완료={}", user.getId());
+        log.info("회원가입한 유저 아이디={}", user.getEmail());
     }
 
     /**

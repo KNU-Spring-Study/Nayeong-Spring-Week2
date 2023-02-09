@@ -3,75 +3,81 @@ package com.example.springlogin.controller;
 import com.example.springlogin.domain.User;
 import com.example.springlogin.dto.LogInUserDTO;
 import com.example.springlogin.dto.UserDTO;
+import com.example.springlogin.service.UserService;
 import com.example.springlogin.service.session.SessionConst;
 import com.example.springlogin.service.session.SessionManager;
-import com.example.springlogin.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.util.LinkedHashMap;
-
-
 @Slf4j
-//@RestController
-//@RequestMapping("user")
+@Controller
+@RequestMapping("user")
 @RequiredArgsConstructor
-public class UserController {
+public class ViewController {
 
-//    private SessionManager sessionManager = new SessionManager();
     private final UserService userService;
+
+    @GetMapping("/sign-up")
+    public String signUpForm(@ModelAttribute("user") User user) {
+        return "web/sign-up";
+    }
 
     /**
      * 회원가입
      * @param user
+     * @param bindingResult
      * @return
      */
     @PostMapping("/sign-up")
-    public ResponseEntity signUp(@RequestBody User user, BindingResult bindingResult) {
+    public String signUp(@Valid @ModelAttribute User user, BindingResult bindingResult) {
         boolean flag = userService.join(user);
         if(flag) {
             log.info("회원가입 성공");
-            return new ResponseEntity(HttpStatus.OK);
+            return "web/home";
         }
         else {
             log.info("회원가입 실패");
             bindingResult.reject("signUpFail", "이미 존재하는 이메일입니다.");
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return "web/sign-up";
         }
+    }
+
+    @GetMapping("/sign-in")
+    public String SignInForm(@ModelAttribute("user") LogInUserDTO logInUserDTO) {
+        return "web/login";
     }
 
     /**
      * 로그인
-     * @param response
+     * @param request
+     * @param bindingResult
      * @param logInUserDTO
-     * @throws IOException
+     * @return
      */
     @PostMapping("/sign-in")
-    public void signIn(HttpServletRequest request,
-                       HttpServletResponse response,
-                       BindingResult bindingResult,
-                       @RequestBody LogInUserDTO logInUserDTO) throws IOException {
-        if(bindingResult.hasErrors()) {
-            log.info("홈 화면으로 리다이렉트");
-            response.sendRedirect("http://localhost:8080/home");
-            return;
-        }
+    public String signIn(@Valid @ModelAttribute("user") LogInUserDTO logInUserDTO,
+                         BindingResult bindingResult,
+                         HttpServletRequest request) {
+
+//        if(bindingResult.hasErrors()) {
+//            log.info("로그인 화면으로 리다이렉트");
+//            log.info("error={}", bindingResult.getAllErrors());
+//            return "redirect:/user/sign-in";
+//        }
 
         User loginUser = userService.logIn(logInUserDTO);
 
         if(loginUser == null) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
-            log.info("홈 화면으로 리다이렉트");
-            response.sendRedirect("http://localhost:8080/home");
-            return;
+            return "/web/login";
         }
 
         HttpSession session = request.getSession();
@@ -79,46 +85,45 @@ public class UserController {
 
         log.info("login={}", loginUser.getId());
         log.info("홈 화면으로 리다이렉트");
-        response.sendRedirect("http://localhost:8080/home");
+        return "redirect:/home";
     }
 
     /**
      * 로그아웃
      * @param request
-     * @param response
-     * @throws IOException
+     * @return
      */
     @PostMapping("/logout")
-    public void logout(HttpServletRequest request,
-                       HttpServletResponse response) throws IOException {
+    public String logout(HttpServletRequest request) {
 
         HttpSession session = request.getSession(false);
         if(session != null)
             session.invalidate();   //세션을 제거한다.
 
         log.info("logout={}", request.getSession().getId().toString());
-        response.sendRedirect("http://localhost:8080/home");
+        return "redirect:/";
     }
 
     /**
      * 유저 정보 조회
      * @param request
-     * @param response
+     * @param model
      * @return
-     * @throws IOException
      */
     @GetMapping("/mypage")
-    public ResponseEntity<UserDTO> myPage(HttpServletRequest request,
-                                          HttpServletResponse response) throws IOException {
+    public String myPage(HttpServletRequest request,
+                         Model model) {
         HttpSession session = request.getSession(false);
 
         if(session == null) {
-            response.sendRedirect("http://localhost:8080/user/login");
+            return "redirect:/web/home";
         }
 
         User user = (User) session.getAttribute(SessionConst.LOGIN_MEMBER);
+        model.addAttribute("user", UserDTO.from(user));
 
-        return new ResponseEntity(UserDTO.from(user), HttpStatus.OK);
+        return "web/mypage";
     }
+
 
 }
