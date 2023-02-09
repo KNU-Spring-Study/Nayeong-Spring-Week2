@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class PasswordDTO {
+public class UserConfirmationDTO {
     @NotEmpty
     private String password;
 }

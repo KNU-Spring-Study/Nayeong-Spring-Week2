@@ -2,6 +2,7 @@ package com.example.springlogin.controller;
 
 import com.example.springlogin.domain.User;
 import com.example.springlogin.dto.LogInUserDTO;
+import com.example.springlogin.dto.UserConfirmationDTO;
 import com.example.springlogin.dto.UserDTO;
 import com.example.springlogin.service.UserService;
 import com.example.springlogin.service.session.SessionConst;
@@ -123,5 +124,52 @@ public class ViewController {
         return "web/mypage";
     }
 
+    @GetMapping("/confirm")
+    public String confirmForm(@ModelAttribute("user") UserConfirmationDTO userConfirmationDTO) {
+        return "web/password";
+    }
+
+    /**
+     * 비밀번호 검증
+     * @param userConfirmationDTO
+     * @param bindingResult
+     * @param user
+     * @return
+     */
+    @PostMapping("/confirm")
+    public String confirm(@Valid @ModelAttribute("user") UserConfirmationDTO userConfirmationDTO,
+                          BindingResult bindingResult,
+                          @SessionAttribute(name = SessionConst.LOGIN_MEMBER) User user) {
+        if(bindingResult.hasErrors()) {
+            log.info("이전 화면으로 리다이렉트");
+            log.info("error={}", bindingResult.getAllErrors());
+            return "redirect:/user/mypage";
+        }
+
+        if(user == null) return "web/home";
+
+        Boolean check = userService.passwordCheck(userConfirmationDTO, user);
+
+        if(!check) {
+            bindingResult.reject("confirmFail", "비밀번호가 일치하지 않습니다.");
+            return "/web/mypage";
+        }
+
+        log.info("비밀번호 인증 성공={}", user.getEmail());
+        return "redirect:/user/editUser";
+    }
+
+    @GetMapping("/editUser")
+    public String editUserForm(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) User user, Model model) {
+        if(user == null) return "redirect:/user/mypage";
+        model.addAttribute("user", user);
+        return "web/editUser";
+    }
+
+    @PostMapping("/editUser")
+    public String editUser(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) User user, @ModelAttribute User updateUser) {
+        userService.modifyUser(user.getId(), updateUser);
+        return "web/mypage";
+    }
 
 }

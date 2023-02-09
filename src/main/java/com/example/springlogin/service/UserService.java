@@ -1,6 +1,7 @@
 package com.example.springlogin.service;
 
 import com.example.springlogin.dto.LogInUserDTO;
+import com.example.springlogin.dto.UserConfirmationDTO;
 import com.example.springlogin.repository.UserRepository;
 import com.example.springlogin.domain.User;
 import com.example.springlogin.service.validator.UserValidator;
@@ -33,7 +34,6 @@ public class UserService {
 
     }
 
-
     /**
      * 로그인
      * @param logInUserDTO
@@ -52,5 +52,19 @@ public class UserService {
 
         return user;
 
+    }
+
+    public Boolean passwordCheck(UserConfirmationDTO userConfirmationDTO, User user) {
+        return userValidator.validatePassword(userConfirmationDTO.getPassword(), user);
+    }
+
+    /**
+     * 회원정보 수정
+     * @param userId
+     * @param updateUser
+     */
+    public void modifyUser(Long userId, User updateUser) {
+        updateUser.setId(userId);
+        userRepository.updateUser(userId, updateUser);
     }
 }

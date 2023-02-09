@@ -45,4 +45,8 @@ public class UserRepositoryImpl implements UserRepository {
         return Optional.empty();
     }
 
+    @Override
+    public void updateUser(Long userId, User updateUser) {
+        map.put(userId, updateUser);
+    }
 }

@@ -8,4 +8,6 @@ public interface UserRepository {
     public void save(User user);
 
     public Optional<User> findUserByUserEmail(String email);
+
+    void updateUser(Long userId, User updateUser);
 }
