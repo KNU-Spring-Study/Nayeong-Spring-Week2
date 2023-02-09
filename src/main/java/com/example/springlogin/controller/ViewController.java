@@ -5,9 +5,7 @@ import com.example.springlogin.dto.LogInUserDTO;
 import com.example.springlogin.dto.UserDTO;
 import com.example.springlogin.service.UserService;
 import com.example.springlogin.service.session.SessionConst;
-import com.example.springlogin.service.session.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -67,11 +65,11 @@ public class ViewController {
                          BindingResult bindingResult,
                          HttpServletRequest request) {
 
-//        if(bindingResult.hasErrors()) {
-//            log.info("로그인 화면으로 리다이렉트");
-//            log.info("error={}", bindingResult.getAllErrors());
-//            return "redirect:/user/sign-in";
-//        }
+        if(bindingResult.hasErrors()) {
+            log.info("로그인 화면으로 리다이렉트");
+            log.info("error={}", bindingResult.getAllErrors());
+            return "redirect:/user/sign-in";
+        }
 
         User loginUser = userService.logIn(logInUserDTO);
 
@@ -101,7 +99,7 @@ public class ViewController {
             session.invalidate();   //세션을 제거한다.
 
         log.info("logout={}", request.getSession().getId().toString());
-        return "redirect:/";
+        return "redirect:/home";
     }
 
     /**
