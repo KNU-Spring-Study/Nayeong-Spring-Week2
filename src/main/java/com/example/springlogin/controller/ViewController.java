@@ -166,6 +166,12 @@ public class ViewController {
         return "web/editUser";
     }
 
+    /**
+     * 회원 정보 수정
+     * @param user
+     * @param updateUser
+     * @return
+     */
     @PostMapping("/editUser")
     public String editUser(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) User user, @ModelAttribute User updateUser) {
         userService.modifyUser(user.getId(), updateUser);

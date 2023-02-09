@@ -26,6 +26,12 @@ public class UserValidator {
         return userByUserEmail.orElse(null);
     }
 
+    /**
+     * 비밀번호 검사
+     * @param password
+     * @param user
+     * @return
+     */
     public Boolean validatePassword(String password, User user) {
         if(!user.getPassword().equals(password)) {
             log.info("비밀번호가 일치하지 않음");
