@@ -139,7 +139,8 @@ public class ViewController {
     @PostMapping("/confirm")
     public String confirm(@Valid @ModelAttribute("user") UserConfirmationDTO userConfirmationDTO,
                           BindingResult bindingResult,
-                          @SessionAttribute(name = SessionConst.LOGIN_MEMBER) User user) {
+                          @SessionAttribute(name = SessionConst.LOGIN_MEMBER) User user,
+                          Model model) {
         if(bindingResult.hasErrors()) {
             log.info("이전 화면으로 리다이렉트");
             log.info("error={}", bindingResult.getAllErrors());
@@ -152,8 +153,10 @@ public class ViewController {
 
         if(!check) {
             bindingResult.reject("confirmFail", "비밀번호가 일치하지 않습니다.");
-            return "/web/mypage";
+            return "redirect:/user/mypage";
         }
+
+        model.addAttribute("user", user);
 
         log.info("비밀번호 인증 성공={}", user.getEmail());
         return "redirect:/user/editUser";

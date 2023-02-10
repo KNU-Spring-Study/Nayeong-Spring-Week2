@@ -15,22 +15,22 @@
 <div class="container">
 
     <div class="py-5 text-center">
-        <h2>상품 상세</h2>
+        <h2 th:text="#{page.myPage}">마이페이지</h2>
     </div>
 
     <!-- 추가 -->
     <h2 th:if="${param.status}" th:text="'저장 완료'"></h2>
 
     <div>
-        <label for="email">email</label>
+        <label for="email" th:text="#{label.user.email}">email</label>
         <input type="text" id="email" name="email" class="form-control" value="1" th:value="${user.email}" readonly>
     </div>
     <div>
-        <label for="name">이름</label>
+        <label for="name" th:text="#{label.user.name}">이름</label>
         <input type="text" id="name" name="name" class="form-control" value="이름" th:value="${user.name}" readonly>
     </div>
     <div>
-        <label for="phoneNumber">전화번호</label>
+        <label for="phoneNumber" th:text="#{label.user.phoneNumber}">전화번호</label>
         <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" value="10000" th:value="${user.phoneNumber}" readonly>
     </div>
 
@@ -41,13 +41,13 @@
             <button class="w-100 btn btn-primary btn-lg"
                     onclick="location.href='editForm.html'"
                     th:onclick="|location.href='@{/user/confirm}'|"
-                    type="button">정보 수정</button>
+                    type="button" th:text="#{button.edit}">정보 수정</button>
         </div>
         <div class="col">
             <button class="w-100 btn btn-secondary btn-lg"
                     onclick="location.href='login-home.html'"
                     th:onclick="|location.href='@{/home}'|"
-                    type="button">돌아가기</button>
+                    type="button" th:text="#{button.back}">돌아가기</button>
         </div>
     </div>
 

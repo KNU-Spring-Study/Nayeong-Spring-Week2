@@ -64,7 +64,6 @@ public class UserService {
      * @param updateUser
      */
     public void modifyUser(Long userId, User updateUser) {
-        updateUser.setId(userId);
         userRepository.updateUser(userId, updateUser);
     }
 }

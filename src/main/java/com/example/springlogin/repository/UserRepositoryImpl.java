@@ -46,7 +46,18 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public User findById(Long id) {
+        return map.get(id);
+    }
+
+    @Override
     public void updateUser(Long userId, User updateUser) {
-        map.put(userId, updateUser);
+        User user = findById(userId);
+
+        user.setName(updateUser.getName());
+        user.setPassword(updateUser.getPassword());
+        user.setPhoneNumber(updateUser.getPhoneNumber());
+
+//        map.put(userId, updateUser);
     }
 }

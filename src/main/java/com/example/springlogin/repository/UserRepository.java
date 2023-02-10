@@ -5,9 +5,11 @@ import com.example.springlogin.domain.User;
 import java.util.Optional;
 
 public interface UserRepository {
-    public void save(User user);
+    void save(User user);
 
-    public Optional<User> findUserByUserEmail(String email);
+    Optional<User> findUserByUserEmail(String email);
+
+    User findById(Long id);
 
     void updateUser(Long userId, User updateUser);
 }
