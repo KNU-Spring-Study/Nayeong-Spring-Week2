@@ -37,6 +37,13 @@ public class ViewController {
      */
     @PostMapping("/sign-up")
     public String signUp(@Valid @ModelAttribute User user, BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()) {
+            log.info("회원가입 화면으로 리다이렉트");
+            log.info("error={}", bindingResult);
+            return "redirect:/user/sign-up";
+        }
+
         boolean flag = userService.join(user);
         if(flag) {
             log.info("회원가입 성공");
@@ -68,7 +75,7 @@ public class ViewController {
 
         if(bindingResult.hasErrors()) {
             log.info("로그인 화면으로 리다이렉트");
-            log.info("error={}", bindingResult.getAllErrors());
+            log.info("error={}", bindingResult);
             return "redirect:/user/sign-in";
         }
 
@@ -143,7 +150,7 @@ public class ViewController {
                           Model model) {
         if(bindingResult.hasErrors()) {
             log.info("이전 화면으로 리다이렉트");
-            log.info("error={}", bindingResult.getAllErrors());
+            log.info("error={}", bindingResult);
             return "redirect:/user/mypage";
         }
 
@@ -176,7 +183,14 @@ public class ViewController {
      * @return
      */
     @PostMapping("/editUser")
-    public String editUser(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) User user, @ModelAttribute User updateUser) {
+    public String editUser(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) User user,
+                           @Valid @ModelAttribute User updateUser,
+                           BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            log.info("이전 화면으로 리다이렉트");
+            log.info("error={}", bindingResult);
+            return "redirect:/user/editUser";
+        }
         userService.modifyUser(user.getId(), updateUser);
         return "web/mypage";
     }
