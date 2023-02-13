@@ -24,6 +24,12 @@
                         th:text="#{button.logout}">로그아웃</button>
             </form>
         </div>
+        <div class="col">
+            <form th:action="@{/user/withdrawal}" method="post">
+                <button class="w-100 btn btn-dark btn-lg" type="submit"
+                        th:text="#{button.withdrawal}">회원 탈퇴</button>
+            </form>
+        </div>
     </div>
     <hr class="my-4">
 </div> <!-- /container -->

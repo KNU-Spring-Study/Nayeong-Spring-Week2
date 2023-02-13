@@ -195,4 +195,18 @@ public class ViewController {
         return "web/mypage";
     }
 
+    @PostMapping("/withdrawal")
+    public String withdrawal(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        User user = (User) session.getAttribute(SessionConst.LOGIN_MEMBER);
+
+        if(session != null) {
+            userService.delete(user);
+            log.info("회원 탈퇴 완료");
+            session.invalidate();   //세션을 제거한다.
+            log.info("세션 제거 완료");
+        }
+        return "web/home";
+    }
+
 }

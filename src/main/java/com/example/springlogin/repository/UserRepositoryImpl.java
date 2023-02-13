@@ -57,7 +57,10 @@ public class UserRepositoryImpl implements UserRepository {
         user.setName(updateUser.getName());
         user.setPassword(updateUser.getPassword());
         user.setPhoneNumber(updateUser.getPhoneNumber());
+    }
 
-//        map.put(userId, updateUser);
+    @Override
+    public void deleteUser(Long userId) {
+        map.remove(userId);
     }
 }

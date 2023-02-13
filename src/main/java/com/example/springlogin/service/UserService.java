@@ -66,4 +66,13 @@ public class UserService {
     public void modifyUser(Long userId, User updateUser) {
         userRepository.updateUser(userId, updateUser);
     }
+
+    /**
+     * 회원 정보 삭제
+     * @param user
+     */
+    public void delete(User user) {
+        userRepository.deleteUser(user.getId());
+        log.info("회원 정보 삭제={}", user.getId());
+    }
 }
