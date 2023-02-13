@@ -54,6 +54,12 @@ public class UserService {
 
     }
 
+    /**
+     * 비밀번호 일치하는지 확인
+     * @param userConfirmationDTO
+     * @param user
+     * @return
+     */
     public Boolean passwordCheck(UserConfirmationDTO userConfirmationDTO, User user) {
         return userValidator.validatePassword(userConfirmationDTO.getPassword(), user);
     }

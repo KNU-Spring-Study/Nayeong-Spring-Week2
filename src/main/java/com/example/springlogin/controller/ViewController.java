@@ -63,9 +63,9 @@ public class ViewController {
 
     /**
      * 로그인
-     * @param request
-     * @param bindingResult
      * @param logInUserDTO
+     * @param bindingResult
+     * @param request
      * @return
      */
     @PostMapping("/sign-in")
@@ -141,6 +141,7 @@ public class ViewController {
      * @param userConfirmationDTO
      * @param bindingResult
      * @param user
+     * @param model
      * @return
      */
     @PostMapping("/confirm")
@@ -180,6 +181,7 @@ public class ViewController {
      * 회원 정보 수정
      * @param user
      * @param updateUser
+     * @param bindingResult
      * @return
      */
     @PostMapping("/editUser")
@@ -195,6 +197,11 @@ public class ViewController {
         return "web/mypage";
     }
 
+    /**
+     * 회원 탈퇴
+     * @param request
+     * @return
+     */
     @PostMapping("/withdrawal")
     public String withdrawal(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
