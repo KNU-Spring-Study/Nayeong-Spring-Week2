@@ -22,7 +22,7 @@ public class UserValidator {
      * @return
      */
     public User validateDuplicate(String email) {
-        Optional<User> userByUserEmail = userRepository.findUserByUserEmail(email);
+        Optional<User> userByUserEmail = userRepository.findUserByEmail(email);
         return userByUserEmail.orElse(null);
     }
 

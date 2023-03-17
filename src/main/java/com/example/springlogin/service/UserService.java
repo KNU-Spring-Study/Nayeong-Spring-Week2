@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -70,7 +71,16 @@ public class UserService {
      * @param updateUser
      */
     public void modifyUser(Long userId, User updateUser) {
-        userRepository.updateUser(userId, updateUser);
+//        userRepository.updateUser(userId, updateUser);
+        Optional<User> optionalUser = userRepository.findById(userId);
+
+        User user = optionalUser.get();
+
+        user.setName(updateUser.getName());
+        user.setPassword(updateUser.getPassword());
+        user.setPhoneNumber(updateUser.getPhoneNumber());
+
+        userRepository.save(user);
     }
 
     /**

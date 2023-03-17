@@ -2,14 +2,12 @@ package com.example.springlogin.repository;
 
 import com.example.springlogin.domain.User;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Repository;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-@Repository
 public class UserRepositoryImpl implements UserRepository {
 
     private static final Map<Long, User> map = new ConcurrentHashMap();
@@ -17,15 +15,17 @@ public class UserRepositoryImpl implements UserRepository {
 
     /**
      * 유저 저장
+     *
      * @param user
      * @return
      */
     @Override
-    public void save(User user) {
+    public Object save(User user) {
         user.setId(++sequence);
         map.put(user.getId(), user);
         log.info("회원가입 완료={}", user.getId());
         log.info("회원가입한 유저 아이디={}", user.getEmail());
+        return null;
     }
 
     /**
@@ -34,7 +34,7 @@ public class UserRepositoryImpl implements UserRepository {
      * @return
      */
     @Override
-    public Optional<User> findUserByUserEmail(String email) {
+    public Optional<User> findUserByEmail(String email) {
 
         for(Long key : map.keySet()) {
             if(map.get(key).getEmail().equals(email)) {
@@ -46,18 +46,21 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User findById(Long id) {
-        return map.get(id);
+    public Optional<User> findById(Long id) {
+        return Optional.ofNullable(map.get(id));
     }
 
+/*
     @Override
     public void updateUser(Long userId, User updateUser) {
-        User user = findById(userId);
+        Optional<User> optionalUser = findById(userId);
 
+        User user = optionalUser.get();
         user.setName(updateUser.getName());
         user.setPassword(updateUser.getPassword());
         user.setPhoneNumber(updateUser.getPhoneNumber());
     }
+    */
 
     @Override
     public void deleteUser(Long userId) {
