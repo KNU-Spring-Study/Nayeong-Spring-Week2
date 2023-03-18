@@ -179,13 +179,13 @@ public class ViewController {
 
     /**
      * 회원 정보 수정
-     * @param user
+     * @param request
      * @param updateUser
      * @param bindingResult
      * @return
      */
     @PostMapping("/editUser")
-    public String editUser(@SessionAttribute(name = SessionConst.LOGIN_MEMBER) User user,
+    public String editUser(HttpServletRequest request,
                            @Valid @ModelAttribute User updateUser,
                            BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
@@ -193,7 +193,12 @@ public class ViewController {
             log.info("error={}", bindingResult);
             return "redirect:/user/editUser";
         }
+
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute(SessionConst.LOGIN_MEMBER);
+
         userService.modifyUser(user.getId(), updateUser);
+        session.setAttribute(SessionConst.LOGIN_MEMBER, userService.findByUserId(user.getId()));
         return "web/mypage";
     }
 

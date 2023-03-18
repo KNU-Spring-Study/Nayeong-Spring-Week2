@@ -2,14 +2,13 @@ package com.example.springlogin.service;
 
 import com.example.springlogin.dto.LogInUserDTO;
 import com.example.springlogin.dto.UserConfirmationDTO;
-import com.example.springlogin.repository.UserRepository;
+import com.example.springlogin.repository.JPAUserRepository;
 import com.example.springlogin.domain.User;
 import com.example.springlogin.service.validator.UserValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashMap;
 import java.util.Optional;
 
 @Slf4j
@@ -17,7 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final JPAUserRepository userRepository;
     private final UserValidator userValidator;
 
     /**
@@ -65,6 +64,10 @@ public class UserService {
         return userValidator.validatePassword(userConfirmationDTO.getPassword(), user);
     }
 
+    public User findByUserId(Long userId) {
+        return userRepository.findById(userId).get();
+    }
+
     /**
      * 회원정보 수정
      * @param userId
@@ -88,7 +91,7 @@ public class UserService {
      * @param user
      */
     public void delete(User user) {
-        userRepository.deleteUser(user.getId());
+        userRepository.deleteById(user.getId());
         log.info("회원 정보 삭제={}", user.getId());
     }
 }

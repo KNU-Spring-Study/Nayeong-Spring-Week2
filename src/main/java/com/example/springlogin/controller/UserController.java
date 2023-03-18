@@ -4,7 +4,6 @@ import com.example.springlogin.domain.User;
 import com.example.springlogin.dto.LogInUserDTO;
 import com.example.springlogin.dto.UserDTO;
 import com.example.springlogin.service.session.SessionConst;
-import com.example.springlogin.service.session.SessionManager;
 import com.example.springlogin.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -8,7 +8,8 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-public class UserRepositoryImpl implements UserRepository {
+//@Repository
+public class MapUserRepository implements UserRepository {
 
     private static final Map<Long, User> map = new ConcurrentHashMap();
     private static long sequence = 0L;
@@ -20,7 +21,7 @@ public class UserRepositoryImpl implements UserRepository {
      * @return
      */
     @Override
-    public Object save(User user) {
+    public User save(User user) {
         user.setId(++sequence);
         map.put(user.getId(), user);
         log.info("회원가입 완료={}", user.getId());
@@ -63,7 +64,7 @@ public class UserRepositoryImpl implements UserRepository {
     */
 
     @Override
-    public void deleteUser(Long userId) {
+    public void deleteById(Long userId) {
         map.remove(userId);
     }
 }
